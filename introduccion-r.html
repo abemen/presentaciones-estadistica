@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Taller de estadística con R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Abelardo Méndez" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet/leaflet.js"></script>
+    <link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+    <script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
+    <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
+    <link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding/leaflet.js"></script>
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+name: title-slide
+class: inverse, left, middle
+background-image: url(img/minimalist.jpg)
+background-size: cover
+
+## .fancy[Taller de estadística con R]
+
+### .large[Abelardo Méndez | Rstudio | 24 julio, 2020]
+![](img/logos.png)
+---
+# R Studio
+.pull-left[
+&lt;img src="img/rstudio.jpg" align="left" /&gt;
+]
+
+.pull-right[
+Es un entorno de desarrollo integrado para el lenguaje de programación R.  
+1. Área de código
+1. Consola
+1. Espacio de trabajo | Historial
+1. Archivos | Gráficas | Paquetes | Ayuda
+]
+---
+# R
+.pull-left[
+1. Es un lenguaje de programación.
+1. Las variables no necesitan una declaración de tipo.
+1. Los índices de vectores y listas inicia en 1.
+1. Las listas reunen variedad de objetos bajo el mismo nombre.
+1. La forma más básica de usar R es el modo interactivo (resultado inmediato al escribir comandos)
+]
+.pull-right[
+Por ejemplo:  
+
+```r
+# Usando R como una calculadora
+3*4+5/2
+```
+
+```
+# [1] 14.5
+```
+Asignación de datos a una variable:  
+
+```r
+# Asignación de valores
+a &lt;- 5
+b &lt;- "Hola"
+# Para usar una variable basta con
+# escribirla en la consola ej:
+a
+```
+
+```
+# [1] 5
+```
+]
+
+---
+# R - vectores
+Creación de un vector:
+
+```r
+# Vector con los valores 2, 4, 5, 8, 3
+c(2,4,5,8,3) 
+```
+
+```
+# [1] 2 4 5 8 3
+```
+Generación de una secuencia:  
+
+```r
+# Rango de valores desde 2 hasta 8
+2:8
+```
+
+```
+# [1] 2 3 4 5 6 7 8
+```
+Generación de una secuencia especificando el paso:  
+
+```r
+# Valores 2 hasta 3 con cambios de 0.1
+seq(2, 3, by=0.1)
+```
+
+```
+#  [1] 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0
+```
+---
+# R - vectores
+Vector repetitivo:  
+
+```r
+# Valores 1 hasta 3 repetido 4 veces
+rep(1:3, times = 4)
+```
+
+```
+#  [1] 1 2 3 1 2 3 1 2 3 1 2 3
+```
+Vector con elementos repetidos n veces
+
+```r
+# Valores 1 al 3 cada uno repetido 4 veces
+rep(1:3, each=4)
+```
+
+```
+#  [1] 1 1 1 1 2 2 2 2 3 3 3 3
+```
+---
+# R - vectores
+También se pueden asignar los vectores a las variables
+
+```r
+# x = secuencia de valores desde 1 hasta 5 con un paso de 0.5
+x &lt;- seq(1, 5, by=0.5)
+x
+```
+
+```
+# [1] 1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0
+```
+Hacer operaciones con esos vectores
+
+```r
+# observe la operación realizada con el vector anterior ¿Qué hace?
+x + 10
+```
+
+```
+# [1] 11.0 11.5 12.0 12.5 13.0 13.5 14.0 14.5 15.0
+```
+
+---
+# R - vectores
+Se pueden obtener datos de los vectores
+
+```r
+# El valor almacenado en la posición 4
+x [3]
+```
+
+```
+# [1] 2
+```
+Omitir datos
+
+```r
+# Obtener el conjunto de valores excepto el de la posición 3
+x[-3]
+```
+
+```
+# [1] 1.0 1.5 2.5 3.0 3.5 4.0 4.5 5.0
+```
+Elementos que cumplan una condición
+
+```r
+# Obtener el conjunto de valores mayores a 3
+x[x&gt;3]
+```
+
+```
+# [1] 3.5 4.0 4.5 5.0
+```
+
+---
+# R - matrices
+.pull-left[
+Tomaremos los valores del vector x para llenar la matriz
+
+```r
+# El vector x posee 9 elementos, podemos
+# crear una matriz de 3x3 por ejemplo
+m &lt;- matrix(x, nrow=3, ncol=3)
+m
+```
+
+```
+#      [,1] [,2] [,3]
+# [1,]  1.0  2.5  4.0
+# [2,]  1.5  3.0  4.5
+# [3,]  2.0  3.5  5.0
+```
+]
+.pull-right[
+El número total de elementos de la matriz debe coincidir con el número de elementos del vector o bien ser un múltiplo de este
+
+```r
+# El vector x posee 9 elementos, podemos
+# crear una matriz de 3x6 por ejemplo
+m &lt;- matrix(x, nrow=3, ncol=6)
+m
+```
+
+```
+#      [,1] [,2] [,3] [,4] [,5] [,6]
+# [1,]  1.0  2.5  4.0  1.0  2.5  4.0
+# [2,]  1.5  3.0  4.5  1.5  3.0  4.5
+# [3,]  2.0  3.5  5.0  2.0  3.5  5.0
+```
+]
+---
+# R - data frame
+Es un caso especial de lista en la que todos los elementos son de la misma longitud
+.pull-left[
+
+```r
+# Construyamos una tabla de 3x2
+# La primera columna contiene 1,2 y 3
+# La segunda columna contiene a,b y c
+df &lt;- data.frame(una = 1:3, dos = c('a', 'b', 'c'))
+df
+```
+
+```
+#   una dos
+# 1   1   a
+# 2   2   b
+# 3   3   c
+```
+]
+.pull-right[
+
+```r
+# Construyamos una tabla con el vector x
+# dicho vector tiene 9 valores
+# crearemos el vector y también con 9 valores
+y = 1:9
+df &lt;- data.frame(x, y)
+df
+```
+
+```
+#     x y
+# 1 1.0 1
+# 2 1.5 2
+# 3 2.0 3
+# 4 2.5 4
+# 5 3.0 5
+# 6 3.5 6
+# 7 4.0 7
+# 8 4.5 8
+# 9 5.0 9
+```
+]
+---
+# R - gráficas
+.pull-left[
+Con el conjunto generado a partir de X y Y podemos trazar una gráfica con la función plot().  
+  
+La sintaxis de la función es simple plot(variableX, variableY) o bien el dataframe.
+
+```r
+# Veamos los valores X y Y
+x
+```
+
+```
+# [1] 1.0 1.5 2.0 2.5 3.0 3.5 4.0 4.5 5.0
+```
+
+```r
+y
+```
+
+```
+# [1] 1 2 3 4 5 6 7 8 9
+```
+
+]
+.pull-right[
+
+```r
+plot(df)
+```
+
+![](introduccion-r_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+]
+---
+# R - cargar datos desde el portapapeles
+Si tiene sus datos en una hoja de cálculo, una forma sencilla de utilizarlos es copiando y pegando. para ello puede utilizar una de las dos funciones siguientes:
+
+```r
+# Función para copiar y pegar datos de hoja de cálculo
+datos &lt;- read.table(file="clipboard")
+```
+o bien
+
+```r
+datos &lt;- read.delim("clipboard")
+```
+---
+# R - estadística descriptiva
+Para este ejemplo tomarémos los datos de la hoja de cálculo que se comparte vía GoogleDrive [taller](https://docs.google.com/spreadsheets/d/1qPWSXiWmISxjD47A8yENzkr4cahBo5nrlsXPbBOrC_E/edit?usp=sharing). Copie y pegue los datos a la variable **datos**.  
+
+
+Las funciones a tratar a continuación hacen uso del conjunto de datos que a copiado desde el archivo.
+
+```r
+# Veamos las primeras 7 filas
+datos[1:7,]
+```
+
+```
+#                               Area Conocimiento                  Rol
+# 1                      Humanidades           10           Estudiante
+# 2           Ingenieria en sistemas            6 Cargo administrativo
+# 3        Ingeniería en electrónica            8           Estudiante
+# 4 Ingenieria en telecomunicaciones            5           Estudiante
+# 5           Ingenieria en sistemas            5           Estudiante
+# 6           Ingenieria en sistemas            7 Exalumno profesional
+# 7 Ingenieria en telecomunicaciones            8 Exalumno profesional
+```
+---
+# R - estadística descriptiva
+Para estos ejemplos se utiliza como conjunto de datos la columna Conocimiento.
+.pull-left[
+### Tamaño de la distribución
+
+```r
+length(datos$Conocimiento)
+```
+
+```
+# [1] 17
+```
+### Rango
+
+```r
+range(datos$Conocimiento)
+```
+
+```
+# [1]  3 10
+```
+]
+.pull-right[
+### Máximo
+
+```r
+max(datos$Conocimiento)
+```
+
+```
+# [1] 10
+```
+### Mínimo
+
+```r
+min(datos$Conocimiento)
+```
+
+```
+# [1] 3
+```
+]
+---
+# R - estadística descriptiva
+.pull-left[
+### Media
+
+```r
+mean(datos$Conocimiento)
+```
+
+```
+# [1] 6.294118
+```
+### Mediana
+
+```r
+median(datos$Conocimiento)
+```
+
+```
+# [1] 6
+```
+]
+.pull-right[
+### Desviación típica
+
+```r
+sd(datos$Conocimiento)
+```
+
+```
+# [1] 1.829095
+```
+### Varianza
+
+```r
+var(datos$Conocimiento)
+```
+
+```
+# [1] 3.345588
+```
+]
+---
+# R - estadística descriptiva
+Los cuantiles se utilizan para obtener las medidas de posición y corresponden al percentil, valor entre [0 y 1].
+.pull-left[
+### Percentil
+
+```r
+# Percentil 40
+quantile(datos$Conocimiento,0.4)
+```
+
+```
+# 40% 
+# 5.4
+```
+### Decil
+
+```r
+# Decil 8
+quantile(datos$Conocimiento,0.8)
+```
+
+```
+# 80% 
+# 7.8
+```
+]
+.pull-right[
+### Cuartil
+
+```r
+# Cuartil 3
+quantile(datos$Conocimiento,0.75)
+```
+
+```
+# 75% 
+#   7
+```
+### Quintil
+
+```r
+# Quintil 2
+quantile(datos$Conocimiento,0.2)
+```
+
+```
+# 20% 
+#   5
+```
+]
+---
+# R - estadística descriptiva
+Una tabla de resumen de estadísticos
+
+```r
+# Resumen sobre datos cuantitativos
+summary(datos$Conocimiento)
+```
+
+```
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#   3.000   5.000   6.000   6.294   7.000  10.000
+```
+¿Y para las cualitativas?
+
+```r
+# Para la columna Rol, el resumen devuelve lo siguiente
+summary(datos$Rol)
+```
+
+```
+#    Length     Class      Mode 
+#        17 character character
+```
+---
+# R - estadística descriptiva
+También puede construirse una tabla de contingencia
+
+```r
+# Almacenaremos la tabla de contingencia en la variable cTable y luego obtenemos el resumen
+cTable &lt;- table(datos$Rol)
+cTable
+```
+
+```
+# 
+#   Cargo administrativo          Desarrollador Docente de estadística 
+#                      1                      2                      2 
+#             Estudiante   Exalumno profesional 
+#                      9                      3
+```
+
+```r
+summary(cTable)
+```
+
+```
+# Number of cases in table: 17 
+# Number of factors: 1
+```
+---
+# R - estadística descriptiva
+Ahora utilicemos dos columnas para la tabla de contingencia
+
+```r
+# Almacenaremos la tabla de contingencia en la variable cTable2 y luego obtenemos el resumen
+cTable2 &lt;- table(datos$Rol, datos$Conocimiento)
+cTable2
+```
+
+```
+#                         
+#                          3 4 5 6 7 8 9 10
+#   Cargo administrativo   0 0 0 1 0 0 0  0
+#   Desarrollador          0 0 0 1 1 0 0  0
+#   Docente de estadística 1 0 1 0 0 0 0  0
+#   Estudiante             0 1 4 0 1 1 1  1
+#   Exalumno profesional   0 0 0 0 2 1 0  0
+```
+
+```r
+summary(cTable2)
+```
+
+```
+# Number of cases in table: 17 
+# Number of factors: 2 
+# Test for independence of all factors:
+# 	Chisq = 29.703, df = 28, p-value = 0.3776
+# 	Chi-squared approximation may be incorrect
+```
+---
+# R - más gráficos
+### Histograma
+
+```r
+# Parámetros: main = título principal, xlab = título del eje x, ylab = título del eje y
+hist(datos$Conocimiento, main = "Nivel de conocimiento", xlab = "Puntuación", ylab="Inscritos")
+```
+
+![](introduccion-r_files/figure-html/unnamed-chunk-39-1.svg)&lt;!-- --&gt;
+---
+class: inverse, middle, center
+# Un WidGet HTML interesante para despedirme
+Siguiente Slide es interactivo, click sobre el globo azul...
+---
+
+```r
+library(leaflet)
+leaflet() %&gt;% addTiles() %&gt;% 
+  setView(lng=-91.5418, lat=14.8437, zoom=16.5) %&gt;% 
+  addMarkers(lng=-91.5418, lat=14.8437, popup="Facultad de Ingeniería, Au! Au! Au!")
+```
+
+<div id="htmlwidget-7ef9066edd52fe3b6bee" style="width:100%;height:432px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7ef9066edd52fe3b6bee">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[14.8437,-91.5418,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Facultad de Ingeniería, Au! Au! Au!",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"setView":[[14.8437,-91.5418],16.5,[]],"limits":{"lat":[14.8437,14.8437],"lng":[-91.5418,-91.5418]}},"evals":[],"jsHooks":[]}</script>
+---
+class: inverse, middle, center
+background-image: url(https://upload.wikimedia.org/wikipedia/commons/3/39/Naruto_Shiki_Fujin.svg)
+background-size: contain
+
+# ¿Dudas?
+
+---
+class: middle
+
+# Gracias por su atención
+.pull-left[  
+Contacto y redes sociales (algunas)  
+<i class="fas  fa-envelope "></i> [abemen@mesoamericana.edu.gt](mailto:abemen\@mesoamericana.edu.gt)  
+<i class="fab  fa-telegram "></i> [abemen](https://t.me/abemen)  
+<i class="fab  fa-r-project "></i> [abemen](https://rpubs.com/abemen)  
+<i class="fab  fa-github "></i> [abemen](https://github.com/abemen)  
+<i class="fab  fa-slideshare "></i> [abemen](https://www.slideshare.net/abemen)  
+<i class="fab  fa-twitch "></i> [abemen](https://www.twitch.tv/abemen)  
+<i class="fab  fa-facebook-square "></i> [abemenAcademico](https://www.facebook.com/abemenAcademico/)  
+<i class="fab  fa-youtube "></i>[Abelardo Méndez](https://www.youtube.com/channel/UCLYnnL5sh8URlm4y_PlTOIw/)  
+<i class="fab  fa-blogger "></i> [https://abemen-academico.blogspot.com/](https://abemen-academico.blogspot.com/)]
+.pull-right[
+&lt;img src="img/collage.jpg" width="75%"&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
