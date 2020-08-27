@@ -4,3 +4,5 @@ Acá he colocado una serie de presentaciones relacionados con el uso de lenguaje
 [Slides - Index](https://abemen.github.io/presentaciones-estadistica/): a manera de un índice de presentaciones que iré actualizando conformque vaya agregando contenido.  
 
 [Slides - Taller de estadística sobre introducción a R](https://abemen.github.io/presentaciones-estadistica/introduccion-r.html#1): explicación rápida y algunos ejemplos de uso de R y funciones estadísticas básicas (sin requerimiento de paquetes adicionales, excepto el leaflet que se presenta como mero atractivo).
+
+[Slides - Taller de gráficas estadísticas en R](https://abemen.github.io/presentaciones-estadistica/graficas-r.html#1): ejemplos de gráficas estadísticas generadas en R utilizando acceso a hoja de cálculo en GoogleDrive y bancos de datos generados de forma aleatoria.
