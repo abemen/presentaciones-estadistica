@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Taller de estadística con R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Abelardo Méndez" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+name: title-slide
+class: inverse, left, middle
+background-image: url(img/r.jpg)
+background-size: cover
+
+## .fancy[Taller de gráficas estadísticas con R]
+
+### .large[Abelardo Méndez]
+### .large[Rstudio | 14 de agosto, 2020]
+![](img/ggplot2.png)
+---
+# Importar datos desde GoogleSheets
+Para importar datos desde una hoja de cálculo de Google debe contar con permiso de edición o autenticarse como usuario desde R (sólo se describirá el proceso de autenticación por seguridad).  
+
+También es necesario instalar los paquetes **dplyr** y **googlesheets** si aún no cuenta con ellos
+
+```r
+# El tiempo de instalación dependerá de las necesidades de actualización
+# de otros repositorios
+install.packages("googlesheets")
+install.packages("dplyr")
+# «Se ha omitido los mensajes de instalación»
+```
+Cargar ambos paquetes
+
+```r
+library(dplyr)
+library(googlesheets)
+```
+---
+# Importar datos desde GoogleSheets
+Se carga el libro (vinculado a una variable)
+
+```r
+# La variable que se utiliza para este caso es "libro"
+libro &lt;- gs_url("https://docs.google.com/spreadsheets/d/1qPWSXiWmISxjD47A8yENzkr4cahBo5nrlsXPbBOrC_E/edit?usp=sharing")
+# Sheet-identifying info appears to be a browser URL.
+# googlesheets will attempt to extract sheet key from the URL.
+# Putative key: «se ha omitido intencionalmente el valor de la clave»
+# Worksheets feed constructed with public visibility
+# Warning: `as_data_frame()` is deprecated as of tibble 2.0.0.
+# Please use `as_tibble()` instead.
+# The signature and semantics have changed, see `?as_tibble`.
+# This warning is displayed once every 8 hours.
+# Call `lifecycle::last_warnings()` to see where this warning was generated.
+```
+---
+# Importar datos desde GoogleSheets
+Puesto que los datos están contenidos en una hoja del libro, la cargaremos a una variable para generar la tabla a analizar.
+
+
+```r
+# La variable que se utiliza para este caso es "libro"
+datos &lt;- gs_read_csv(libro, ws=1)
+```
+
+```
+# Accessing worksheet titled 'Datos'.
+```
+
+```
+# Parsed with column specification:
+# cols(
+#   Area = col_character(),
+#   Conocimiento = col_double(),
+#   Rol = col_character()
+# )
+```
+---
+# Imporar datos desde GoogleSheets
+
+```r
+# Veamos las primeras 10 filas
+datos[1:10,]
+```
+
+```
+# # A tibble: 10 x 3
+#    Area                             Conocimiento Rol                   
+#    &lt;chr&gt;                                   &lt;dbl&gt; &lt;chr&gt;                 
+#  1 Humanidades                                10 Estudiante            
+#  2 Ingenieria en sistemas                      6 Cargo administrativo  
+#  3 Ingeniería en electrónica                   8 Estudiante            
+#  4 Ingenieria en telecomunicaciones            5 Estudiante            
+#  5 Ingenieria en sistemas                      5 Estudiante            
+#  6 Ingenieria en sistemas                      7 Exalumno profesional  
+#  7 Ingenieria en telecomunicaciones            8 Exalumno profesional  
+#  8 Ingeniería en electrónica                   5 Estudiante            
+#  9 Ingenieria en sistemas                      5 Docente de estadística
+# 10 Ingenieria en sistemas                      7 Desarrollador
+```
+1. Dos variables cualitativas: Área y Rol
+1. Una variable cuantitativa: Conocimiento
+---
+# Gráfico de barras
+
+```r
+# Para ello se utiliza la función barplot
+# La sintaxis básica es barplot(conjunto_de_datos, main="Título principal")
+barplot(table(datos$Area),main="Área a la que pertenece")
+```
+
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Gráfico de barras
+
+```r
+# También puede realizarse con las frecuencias relativas
+# Puede facilitar su trabajo si emplea variables para generar las tablas
+barplot(prop.table(table(datos$Area)),main="Área a la que pertenece")
+```
+
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Gráfico de barras
+
+```r
+# Ahora la gráfica para rol y además se coloca los títulos de los ejes
+# xlab ="Título del eje x", ylab="Título del eje Y"
+barplot(table(datos$Rol),main="Rol que desempeña",xlab="Rol", ylab = "Asistentes")
+```
+
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Generación de un banco de datos
+Para ello se hará uso de números aleatorios y los resultados se almacenarán en variables para utilizarlas en los próximos ejemplos.  
+
+```r
+# función set.seed(secuencia) inicia el generador de números aleatorios
+# el valor de la secuencia es arbitrario pero debe ser entero
+set.seed(1)
+# función rnorm(n, mean= valor_media, sd=valor_desviación)
+pesoH &lt;- rnorm(50, mean=150, sd=8)
+pesoM &lt;- rnorm(50, mean=120, sd=3)
+pesoH
+```
+
+```
+#  [1] 144.9884 151.4691 143.3150 162.7622 152.6361 143.4363 153.8994 155.9066
+#  [9] 154.6063 147.5569 162.0942 153.1187 145.0301 132.2824 158.9994 149.6405
+# [17] 149.8705 157.5507 156.5698 154.7512 157.3518 156.2571 150.5965 134.0852
+# [25] 154.9586 149.5510 148.7536 138.2340 146.1748 153.3435 160.8694 149.1777
+# [33] 153.1014 149.5696 138.9835 146.6800 146.8457 149.5255 158.8002 156.1054
+# [41] 148.6838 147.9731 155.5757 154.4533 144.4900 144.3400 152.9167 156.1483
+# [49] 149.1012 157.0489
+```
+---
+# Histograma
+
+```r
+# función hist(variable, breaks=vector_intervalos, freq=valor_lógico), el asignar TRUE para
+# valor_lógico indica que el histograma es una representación de frecuencias y FALSE plotea
+# los componentes de densidad de probabilidad
+hist(pesoH, breaks = 5, freq = TRUE)
+```
+
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Histograma
+
+```r
+# también puede elegirse breaks siguiendo la regla de Sturges
+hist(pesoH, breaks = "Sturges", freq = TRUE, main = "Distribución de Peso(lb)")
+```
+
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Histograma
+
+```r
+# Observe el eje Y, ahora se utilizó freq como densidad de probabilidad
+hist(pesoH, breaks = 5, freq = FALSE, main = "Distribución de Peso(lb)")
+```
+
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Histograma
+Ahora combinemos dos grupos, aplicaremos color a cada uno para distinguirlos. Para evitar saturación acá se dejan las instrucciones y en el siguiente slide se agrega la gráfica.  
+
+```r
+# La primera se genera con los datos de peso en hombres -&gt; pesoH
+hist(pesoH, breaks = 5, xlim=c(110,175), main = "Distribución de Peso(lb)", 
+     xlab = "Peso", ylab= "Frecuencia", col=rgb(0,0,1,0.5))
+```
+Note que el parámetro xlim corresponde a los límites inferior y superior para el eje X # se recomienda que previo a generar el gráfico verifique los valores máximo y mínimo de cada conjunto de datos para seleccionar el rango adecuado.
+
+```r
+# Se genera el segundo histograma con los datos de peso en mujeres -&gt; pesoM
+# y se agrega el parámetro add=TRUE, para que lo dibuje por encima
+hist(pesoM, breaks = 5, xlim=c(110,175), col=rgb(1,0,0,0.5), add=TRUE)
+# Agregamos una leyenda
+legend("topright", legend=c("Hombres","Mujeres"), col=c(rgb(0,0,1,0.5),
+    rgb(1,0,0,0.5)), pt.cex=2, pch=15 )
+```
+---
+# Histograma
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Histograma
+También se puede generar una matriz de gráficos, acá se colocan las instrucciones en el siguiente slide se muestra el resultado.
+
+```r
+# Función par(), parámetros mfrow=c(nfilas,mcolumnas), mar(abajo, izquierda, arriba, derecha)
+par(
+  mfrow=c(1,2),
+  mar=c(4,4,1,0)
+)
+# Primer histograma, quedará a la izquierda
+hist(pesoH, breaks = 5, main = "", xlab = "Peso", ylab= "Frecuencia", col=rgb(0,0,1,0.5))
+# Se genera el segundo histograma
+hist(pesoM, breaks = 5, main = "", xlab = "Peso", ylab="", col=rgb(1,0,0,0.5), add=TRUE)
+# Se agrega un título común para la matriz de gráficos con la función mtext
+mtext("Distribución de peso en Hombres y Mujeres", side=3, outer=TRUE, line=-1)
+```
+---
+# Histograma
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Box Plot
+
+```r
+# Se debe crear una tabla de datos con los nombres y valores
+# Se procede a crear el vector de valores para los nombres
+series &lt;- c("Hombres", "Mujeres")
+valores &lt;- c(pesoH,pesoM)
+conjunto &lt;- data.frame(series, valores)
+boxplot(conjunto$valores ~ conjunto$series, ylab = "Peso", xlab = "Grupo")
+```
+
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+---
+# Gráfica de sectores
+Para este gráfico se utilizará ggplot2 y se alimentará con los datos almacenados en la variable valores
+
+```r
+# Se hace llamada a ggplot2
+library(ggplot2)
+# Se crea la serie de datos con los valores y etiquetas de cada categoría
+datosC &lt;- data.frame(grupo=c("Primero","Segundo","Tercero","Cuarto","Quinto"),
+                     valores=c(13,7,9,21,2))
+# Gráfico de sectores básico
+ggplot(datosC, aes(x="", y=valores, fill=grupo)) + geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=0)
+```
+Los parámetros de ggplot corresponden al conjunto de valores en datosC y tanto las etiquetas de los ejes como los valores para generarlo en el parámetro aes.
+---
+# Gráfica de sectores
+&lt;img src="graficas-r_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: inverse, middle, center
+background-image: url(https://upload.wikimedia.org/wikipedia/commons/3/39/Naruto_Shiki_Fujin.svg)
+background-size: contain
+
+# ¿Dudas?
+
+---
+class: middle
+
+# Gracias por su atención
+.pull-left[  
+Contacto y redes sociales (algunas)  
+<i class="fas  fa-envelope "></i> [abemen@mesoamericana.edu.gt](mailto:abemen\@mesoamericana.edu.gt)  
+<i class="fab  fa-telegram "></i> [abemen](https://t.me/abemen)  
+<i class="fab  fa-r-project "></i> [abemen](https://rpubs.com/abemen)  
+<i class="fab  fa-github "></i> [abemen](https://github.com/abemen)  
+<i class="fab  fa-slideshare "></i> [abemen](https://www.slideshare.net/abemen)  
+<i class="fab  fa-twitch "></i> [abemen](https://www.twitch.tv/abemen)  
+<i class="fab  fa-facebook-square "></i> [abemenAcademico](https://www.facebook.com/abemenAcademico/)  
+<i class="fab  fa-youtube "></i>[Abelardo Méndez](https://www.youtube.com/channel/UCLYnnL5sh8URlm4y_PlTOIw/)  
+<i class="fab  fa-blogger "></i> [https://abemen-academico.blogspot.com/](https://abemen-academico.blogspot.com/)]
+.pull-right[
+&lt;img src="img/collage.jpg" width="75%"&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
